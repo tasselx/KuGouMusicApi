@@ -4,8 +4,8 @@ const express = require('express');
 const decode = require('safe-decode-uri-component');
 const { cookieToJson } = require('./util/util');
 const { createRequest } = require('./util/request');
-const dotenv = require('dotenv');
 const cache = require('./util/apicache').middleware;
+const config = require('./config');
 
 /**
  * @typedef {{
@@ -20,11 +20,6 @@ const cache = require('./util/apicache').middleware;
 *  server?: import('http').Server,
 * }} ExpressExtension
 */
-
-const envPath = path.join(process.cwd(), '.env');
-if (fs.existsSync(envPath)) {
-  dotenv.config({path: envPath, quiet: true});
-}
 
 /**
  *  描述：动态获取模块定义
@@ -58,7 +53,7 @@ async function getModulesDefinitions(modulesPath, specificRoute, doRequire = tru
  */
 async function consturctServer(moduleDefs) {
   const app = express();
-  const { CORS_ALLOW_ORIGIN } = process.env;
+  const { corsAllowOrigin } = config.server;
   app.set('trust proxy', true);
 
   /**
@@ -68,7 +63,7 @@ async function consturctServer(moduleDefs) {
     if (req.path !== '/' && !req.path.includes('.')) {
       res.set({
         'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Origin': CORS_ALLOW_ORIGIN || req.headers.origin || '*',
+        'Access-Control-Allow-Origin': corsAllowOrigin || req.headers.origin || '*',
         'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type',
         'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
         'Content-Type': 'application/json; charset=utf-8',
@@ -95,9 +90,9 @@ async function consturctServer(moduleDefs) {
     const cookies = (req.headers.cookie || '').split(/;\s+|(?<!\s)\s+$/g);
     if (!cookies.includes('KUGOU_API_PLATFORM')) {
       if (req.protocol === 'https') {
-        res.append('Set-Cookie', `KUGOU_API_PLATFORM=${process.env.platform}; PATH=/; SameSite=None; Secure`);
+        res.append('Set-Cookie', `KUGOU_API_PLATFORM=${config.platform}; PATH=/; SameSite=None; Secure`);
       } else {
-        res.append('Set-Cookie', `KUGOU_API_PLATFORM=${process.env.platform}; PATH=/`);
+        res.append('Set-Cookie', `KUGOU_API_PLATFORM=${config.platform}; PATH=/`);
       }
     }
 
@@ -198,8 +193,8 @@ async function consturctServer(moduleDefs) {
  * @returns {Promise<import('express').Express & ExpressExtension>}
  */
 async function startService() {
-  const port = Number(process.env.PORT || '3000');
-  const host = process.env.HOST || '';
+  const port = Number(config.server.port || 3000);
+  const host = config.server.host || '';
 
   const app = await consturctServer();
 

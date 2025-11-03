@@ -1,4 +1,5 @@
 const { URL } = require('node:url');
+const config = require('../config');
 
 /** @type {string | undefined} */
 let cachedRaw;
@@ -43,13 +44,15 @@ function applyProxyFromArgs(args = process.argv.slice(2)) {
 }
 
 /**
- * Resolve proxy configuration from environment variable.
+ * Resolve proxy configuration from config file or environment variable.
  * Caches latest parsed result to avoid repeated parsing.
  * @returns {import('axios').AxiosProxyConfig | null}
  */
 function resolveProxy() {
+  // 优先使用配置文件，其次使用环境变量（用于命令行参数注入）
+  const configProxy = config.proxy && config.proxy.trim().length > 0 ? config.proxy.trim() : undefined;
   const rawProxyEnv = typeof process.env.KUGOU_API_PROXY === 'string' ? process.env.KUGOU_API_PROXY.trim() : undefined;
-  const rawProxy = rawProxyEnv && rawProxyEnv.length > 0 ? rawProxyEnv : undefined;
+  const rawProxy = configProxy || (rawProxyEnv && rawProxyEnv.length > 0 ? rawProxyEnv : undefined);
 
   if (!rawProxy) {
     cachedRaw = undefined;

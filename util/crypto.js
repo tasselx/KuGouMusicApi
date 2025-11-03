@@ -1,5 +1,6 @@
 const crypto = require('node:crypto');
 const { randomString } = require('./util');
+const config = require('../config');
 const publicRasKey = `-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIAG7QOELSYoIJvTFJhMpe1s/gbjDJX51HBNnEl5HXqTW6lQ7LC8jr9fWZTwusknp+sVGzwd40MwP6U5yDE27M/X1+UR4tvOGOqp94TJtQ1EPnWGWXngpeIW5GxoQGao1rmYWAu6oi1z9XkChrsUdC6DJE5E221wf/4WLFxwAtRQIDAQAB\n-----END PUBLIC KEY-----`;
 const publicLiteRasKey = `-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDECi0Np2UR87scwrvTr72L6oO01rBbbBPriSDFPxr3Z5syug0O24QyQO8bg27+0+4kBzTBTBOZ/WWU0WryL1JSXRTXLgFVxtzIY41Pe7lPOgsfTCn5kZcvKhYKJesKnnJDNr5/abvTGf+rHG3YRwsCHcQ08/q6ifSioBszvb3QiwIDAQAB\n-----END PUBLIC KEY-----`;
 
@@ -80,7 +81,7 @@ function cryptoAesDecrypt(data, key, iv) {
  * @returns {string} hex
  */
 function cryptoRSAEncrypt(data, publicKey) {
-  const isLite = process.env.platform === 'lite';
+  const isLite = config.platform === 'lite';
   if (typeof data === 'object') data = JSON.stringify(data);
   const buffer = Buffer.isBuffer(data) ? data : Buffer.from(data);
   const _buffer = Buffer.concat([buffer, Buffer.alloc(128 - buffer.length)]);
@@ -88,7 +89,7 @@ function cryptoRSAEncrypt(data, publicKey) {
   return crypto.publicEncrypt({ key: publicKey, padding: crypto.constants.RSA_NO_PADDING }, _buffer).toString('hex');
 }
 function rsaEncrypt2(data) {
-  const isLite = process.env.platform === 'lite';
+  const isLite = config.platform === 'lite';
   const useData = typeof data === 'object' ? Buffer.from(JSON.stringify(data)) : Buffer.from(data);
 
   const buffer = Buffer.concat([useData]);

@@ -169,12 +169,30 @@ $ cd KuGouMusicApi
 $ npm install
 ```
 
-### 使用接口为概念版
+### 配置
 
+项目使用 `config.js` 进行配置，可以修改以下配置项：
+
+```javascript
+module.exports = {
+  // 服务器配置
+  server: {
+    port: 3000,              // 服务器端口
+    host: 'localhost',       // 服务器主机地址
+    corsAllowOrigin: '*',    // CORS 跨域配置
+  },
+
+  // 平台配置
+  // 可选值: 'lite' (概念版) 或 '' (标准版)
+  platform: '',              // 留空为标准版，设置为 'lite' 使用概念版
+
+  // 代理配置
+  // 格式: 'http://127.0.0.1:7890' 或留空不使用代理
+  proxy: '',
+};
 ```
-$ 复制 .env.example 为 .env，并且把里面的 `platform=''` 改为 `platform=lite`
-$ 注意不同版本的平台的 token 是不通用的。
-```
+
+**注意**: 不同版本的平台的 token 是不通用的。
 
 ### 运行
 
@@ -182,35 +200,7 @@ $ 注意不同版本的平台的 token 是不通用的。
 $ npm run dev
 ```
 
-服务器启动默认端口为 3000, 若不想使用 3000 端口 , 可使用以下命令 : Mac/Linux
-
-```shell
-$ PORT=4000 npm run dev
-```
-
-windows 下使用 git-bash 或者 cmder 等终端执行以下命令 :
-
-```shell
-$ set PORT=4000 && npm run dev
-```
-
-windows 下使用 PowerShell 终端执行一下命令 :
-
-```shell
-$ $Env:PORT=4000; npm run dev
-```
-
-服务器启动默认 host 为 localhost,如果需要更改, 可使用以下命令 : Mac/Linux
-
-```shell
-$ HOST=127.0.0.1 npm run dev
-```
-
-windows 下使用 git-bash 或者 cmder 等终端执行以下命令 :
-
-```shell
-$ set HOST=127.0.0.1 && npm run dev
-```
+服务器将在 `config.js` 中配置的端口和主机上启动（默认 http://localhost:3000）
 
 ## 免责声明
 
@@ -236,12 +226,11 @@ $ set HOST=127.0.0.1 && npm run dev
 ### 操作方法
 
 1. fork 此项目
-2. 在 Vercel 官网点击 `New Project`
-3. 点击 `Import Git Repository` 并选择你 fork 的此项目并点击 `import`
-4. 点击 `PERSONAL ACCOUNT` 的 `select`
-5. 直接点 `Continue`
-6. 若需要部署版本为概念版（不需要该步骤可以跳过），在 `Environment Variables` 添加 `key` 为 `platform`，`Value (Will Be Encrypted)` 为 `lite` 然后点击
-   `Add`
+2. 修改 `config.js` 文件中的配置（如需使用概念版，设置 `platform: 'lite'`）
+3. 在 Vercel 官网点击 `New Project`
+4. 点击 `Import Git Repository` 并选择你 fork 的此项目并点击 `import`
+5. 点击 `PERSONAL ACCOUNT` 的 `select`
+6. 直接点 `Continue`
 7. `PROJECT NAME`自己填,`FRAMEWORK PRESET` 选 `Other` 然后直接点 `Deploy` 接着等部署完成即可
 
 ## 接口文档

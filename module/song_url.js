@@ -5,12 +5,14 @@
 // subwoofer 乐器
 // ancient 尤克里里
 // dj dj
+const config = require('../config');
+
 module.exports = (params, useAxios) => {
   const quality = ['piano', 'acappella', 'subwoofer', 'ancient', 'dj', 'surnay'].includes(params.quality)
     ? `magic_${params?.quality}`
     : params.quality;
 
-  const isLite = process.env.platform === 'lite';
+  const isLite = config.platform === 'lite';
   const page_id = isLite ? 967177915 : 151369488;
   const ppage_id = isLite ? '356753938,823673182,967485191' : '463467626,350369493,788954147';
 

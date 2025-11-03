@@ -4,6 +4,7 @@ const { signKey, signatureAndroidParams, signatureRegisterParams, signatureWebPa
 const { parseCookieString } = require('./util');
 const { appid, clientver, liteAppid, liteClientver } = require('./config.json');
 const { resolveProxy } = require('./proxy');
+const config = require('../config');
 
 /**
  * @typedef {{status: number;body: any, cookie: string[], headers?: Record<string, string>}} UseAxiosResponse
@@ -29,7 +30,7 @@ const { resolveProxy } = require('./proxy');
  */
 const createRequest = (options) => {
   return new Promise(async (resolve, reject) => {
-    const isLite = process.env.platform === 'lite';
+    const isLite = config.platform === 'lite';
     const dfid = options?.cookie?.dfid || '-'; // 自定义
     const mid = cryptoMd5(dfid); // 可以自定义
     const uuid = cryptoMd5(`${dfid}${mid}`); // 可以自定义

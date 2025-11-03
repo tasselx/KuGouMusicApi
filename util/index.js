@@ -14,9 +14,10 @@ const {
 const { createRequest } = require('./request');
 const { signKey, signParams, signParamsKey, signCloudKey, signatureAndroidParams, signatureRegisterParams, signatureWebParams } = require('./helper');
 const { randomString, decodeLyrics, parseCookieString, cookieToJson } = require('./util');
+const config = require('../config');
 
 // 判断是否为概念版
-const isLite = process.env.platform === 'lite';
+const isLite = config.platform === 'lite';
 const useAppid = isLite ? liteAppid : appid;
 const useClientver = isLite ? liteClientver : clientver;
 
