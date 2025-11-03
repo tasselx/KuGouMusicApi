@@ -3,7 +3,7 @@ module.exports = {
   // 服务器配置
   server: {
     port: 3000,
-    host: 'localhost',
+    host: '0.0.0.0',
     corsAllowOrigin: '*', // 或指定具体域名，如 'http://localhost:8080'
   },
 
